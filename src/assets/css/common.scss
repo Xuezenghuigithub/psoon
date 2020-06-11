@@ -1,0 +1,11 @@
+$chinese-font-family: 'Noto Serif SC';
+$brand-font-family: 'Trande Winds';
+
+.brand {
+  font-family: $brand-font-family;
+  font-size: 2rem;
+}
+
+.font-chinese {
+  font-family: $chinese-font-family;
+}

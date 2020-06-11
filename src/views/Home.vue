@@ -6,12 +6,13 @@
       </v-col>
 
       <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Psoon
-        </h1>
+        <div class="display-2 font-weight-bold mb-3">
+          Welcome to 
+          <span class="brand">Psoon</span>
+        </div>
 
-        <p class="subheading font-weight-regular">
-          快速合成你需要的技术架构图片
+        <p class="subheading font-weight-regular font-chinese">
+          快速合成你需要的技术架构图
         </p>
       </v-col>
     </v-row>
@@ -48,3 +49,10 @@ export default {
   })
 }
 </script>
+<style lang="scss" scoped>
+.brand {
+  margin-left: 1rem;
+  font-family: "Trande Winds";
+  font-size: 5rem;
+}
+</style>

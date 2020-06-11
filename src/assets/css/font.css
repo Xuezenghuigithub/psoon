@@ -1,0 +1,13 @@
+@font-face {
+  font-family: "Trande Winds";
+  src: url('../fonts/TradeWinds-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto Serif SC";
+  src: url('../fonts/NotoSerifSC-Regular.otf');
+  font-weight: normal;
+  font-style: normal;
+}

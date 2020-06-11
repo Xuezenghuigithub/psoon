@@ -1,10 +1,10 @@
 <template>
   <v-app>
     <v-app-bar app dark>
-      <div class="d-flex align-center">
+      <div class="d-flex align-center brand">
         <v-img alt="Vuetify Logo" class="shrink mr-2" contain
           src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png" width="40" />
-        Psoon
+        <span>Psoon</span>
       </div>
 
       <v-spacer></v-spacer>
@@ -62,11 +62,13 @@ export default {
   }
 };
 </script>
-<style>
+<style lang="scss">
+@import "../src/assets/css/font.css";
+@import "@/assets/css/common.scss";
+
 html {
   font-size: 62.5%;
   height: 100%;
   overflow: hidden;
 }
-
 </style>

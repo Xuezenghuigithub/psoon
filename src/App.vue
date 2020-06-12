@@ -8,11 +8,36 @@
       </div>
 
       <v-spacer></v-spacer>
+      
+      <v-menu offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" @click="loginFlag && login" text>
+            <span class="mr-2">{{username}}</span>
+            <v-icon>mdi-account-circle</v-icon>
+          </v-btn >
+        </template>
+        <v-list flat>
+          <v-list-item-group>
+            <v-list-item v-if="isAdmin">
+              <v-list-item-icon>
+                <v-icon>mdi-cogs</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>管理</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
 
-      <v-btn :disabled="signInButton" @click="login" text>
-        <span class="mr-2">{{username}}</span>
-        <v-icon>mdi-account-circle</v-icon>
-      </v-btn>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-account-arrow-left</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>登出</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-menu>
 
       <v-btn href="https://github.com/Xuezenghuigithub/psoon" target="_blank" text>
         <span class="mr-2">GitHub</span>
@@ -61,17 +86,25 @@ export default {
     showSignIn: false,
     showSignUp: false,
     username: 'Sign in',
-    signInButton: false,
+    loginFlag: true, // 控制登录注册 dialog 事件是否可用
+    // isAdmin: false, // 是否为管理员
   }),
   mounted() {
     this.setUsername();
+  },
+  computed: {
+    isAdmin(){
+      getters: {
+        return localStorage.getItem('isAdmin');
+      }
+    }
   },
   methods: {
     setUsername(){
       const username = localStorage.getItem('username');
       if (username) {
         this.username = username;
-        this.signInButton = true;
+        this.loginFlag = false;
       }
     },
     login() {

@@ -80,8 +80,9 @@ export default {
       const { data } = await this.$request.fetch('/api/login', { email: this.email, password }, 'post');
       if (data.status === 200) {
         this.$snackbar().showOk('登录成功');
-        this.close();
         localStorage.setItem('username', data.result.username);
+        localStorage.setItem('isAdmin', data.result.is_admin);
+        this.close();
       } else if(data.status === 5021){
         this.$snackbar().showError('用户不存在');
       } else if(data.status === 5022){

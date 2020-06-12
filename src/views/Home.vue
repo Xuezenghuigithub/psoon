@@ -1,5 +1,5 @@
 <template>
-  <v-container class="home">
+  <v-container>
     <v-row class="text-center">
       <v-col cols="12">
         <v-img :src="require('../assets/logo.svg')" class="my-3" contain height="200" />
@@ -19,7 +19,7 @@
     <v-row align="center" justify="center">
       <v-col cols="5">
         <v-card class="pa-3" color="rgba(198,208,222,.7)" elevation="10" hover light shaped>
-          <v-autocomplete label="Please Select Tech" chips :items="techList1" item-text="name" item-value="_id"></v-autocomplete>
+          <v-autocomplete label="Please Select Tech" :items="techList1" item-text="name" item-value="_id"></v-autocomplete>
             <v-img></v-img>
         </v-card>
       </v-col>
@@ -28,7 +28,7 @@
       </v-col>
       <v-col cols="5">
         <v-card class="pa-3" color="rgba(198,208,222,.7)" elevation="10" hover light shaped>
-          <v-autocomplete label="Please Select Tech" chips :items="techList1" item-text="name" item-value="_id"></v-autocomplete>
+          <v-autocomplete label="Please Select Tech" :items="techList1" item-text="name" item-value="_id"></v-autocomplete>
         </v-card>
       </v-col>
     </v-row>
@@ -44,6 +44,10 @@ export default {
       {
         _id: "32131231",
         name: "Node.js"
+      },
+      {
+        _id: "21392816",
+        name: "MongoDB"
       },
     ]
   })

@@ -9,8 +9,8 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn @click="login" text>
-        <span class="mr-2">Login</span>
+      <v-btn :disabled="signInButton" @click="login" text>
+        <span class="mr-2">{{username}}</span>
         <v-icon>mdi-account-circle</v-icon>
       </v-btn>
 
@@ -25,14 +25,20 @@
         <home></home>
       </v-parallax>
 
-      <v-overlay opacity=".7" light v-show="showLogin">
-        <login  v-on:closeLogin="closeLoginDialog" class="login" />
+      <!-- 登录组件 -->
+      <v-overlay opacity=".7" light v-show="showSignIn">
+        <login v-on:emitLogin="handleEmitFromLogin" class="login" />
+      </v-overlay>
+
+      <!-- 注册组件 -->
+      <v-overlay opacity=".7" light v-show="showSignUp">
+        <sign-up v-on:emitSignUp="handleEmitFromSignUp" class="login" />
       </v-overlay>
 
     </v-content>
     <v-bottom-navigation dark hide-on-scroll horizontal>
       <v-btn value="recent" block>
-        <span>like</span>
+        <span>Like</span>
         <v-icon>mdi-thumb-up-outline</v-icon>
       </v-btn>
     </v-bottom-navigation>
@@ -42,22 +48,51 @@
 <script>
 import Home from "./views/Home";
 import Login from "./components/Login";
+import SignUp from "./components/Signup";
 
 export default {
   name: "App",
   components: {
     Home,
-    Login
+    Login,
+    SignUp
   },
   data: () => ({
-    showLogin: false
+    showSignIn: false,
+    showSignUp: false,
+    username: 'Sign in',
+    signInButton: false,
   }),
+  mounted() {
+    this.setUsername();
+  },
   methods: {
-    login() {
-      this.showLogin = true;
+    setUsername(){
+      const username = localStorage.getItem('username');
+      if (username) {
+        this.username = username;
+        this.signInButton = true;
+      }
     },
-    closeLoginDialog(step){
-      this.showLogin = step;
+    login() {
+      this.showSignIn = true;
+    },
+    handleEmitFromLogin(data){
+      if (data.function === 'close') {
+        this.showSignIn = false;
+        this.setUsername();
+      } else if(data.function === 'signUp') {
+        this.showSignIn = false;
+        this.showSignUp = !this.showSignIn;
+      }
+    },
+    handleEmitFromSignUp(data) {
+      if (data.function === 'close') {
+        this.showSignUp = false;
+      } else if(data.function === 'signIn') {
+        this.showSignUp = false;
+        this.showSignIn = !this.showSignUp;
+      }
     }
   }
 };

@@ -41,7 +41,7 @@
 import md5 from "js-md5";
 
 export default {
-  name: "Login",
+  name: "SignIn",
   data() {
     return {
       email: "",
@@ -65,14 +65,14 @@ export default {
       this.password = "";
       this.$refs.form.resetValidation();
 
-      this.$emit("emitLogin", { function: "close" });
+      this.$emit("emitSignIn", { function: "close" });
     },
     signUp() {
       this.username = "";
       this.password = "";
       this.$refs.form.resetValidation();
 
-      this.$emit("emitLogin", { function: "signUp" });
+      this.$emit("emitSignIn", { function: "signUp" });
     },
     async submit() {
       const password = md5(this.password);
@@ -117,11 +117,7 @@ export default {
 }
 .card {
   height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(146, 135, 187, 0.8) 0%,
-    rgba(0, 0, 0, 0.6) 100%
-  );
+  background: linear-gradient(to bottom,rgba(146, 135, 187, 0.8) 0%,rgba(0, 0, 0, 0.6) 100%);
 }
 .form {
   position: absolute;

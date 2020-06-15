@@ -31,9 +31,9 @@
       <v-row align="center" justify="center">
         <v-col cols="5">
           <v-card class="pa-3" color="rgba(198,208,222,.7)" elevation="10" hover light shaped>
-            <v-autocomplete @change="selected" label="Please Select Tech" :items="techList1" item-text="name"
+            <v-autocomplete @change="selected1" label="Please Select Tech" :items="techList1" item-text="name"
               item-value="_id"></v-autocomplete>
-            <v-img alt="tech1" height="400" contain src="../assets/starry.jpg"></v-img>
+            <v-img v-if="showImg1" alt="Tech1" height="400" contain :src="imgPath1"></v-img>
           </v-card>
         </v-col>
 
@@ -43,9 +43,9 @@
 
         <v-col cols="5">
           <v-card class="pa-3" color="rgba(198,208,222,.7)" elevation="10" hover light shaped>
-            <v-autocomplete label="Please Select Tech" :items="techList2" item-text="name" item-value="_id">
+            <v-autocomplete @change="selected2" label="Please Select Tech" :items="techList2" item-text="name" item-value="_id">
             </v-autocomplete>
-            <v-img alt="Tech2" :src="src"></v-img>
+            <v-img v-if="showImg2" alt="Tech2" height="400" :src="imgPath2"></v-img>
           </v-card>
         </v-col>
       </v-row>
@@ -73,11 +73,15 @@ export default {
     SignUp
   },
   data: () => ({
+    staticPath: "http://localhost:2000/",
     techList1: [],
     techList2: [],
     showSignIn: false,
     showSignUp: false,
-    src: ""
+    imgPath1: "",
+    imgPath2: "",
+    showImg1: false,
+    showImg2: false,
   }),
   mounted() {
     this.getTechs();
@@ -115,12 +119,24 @@ export default {
         this.showSignIn = !this.showSignUp;
       }
     },
-    selected(_id) {
+    selected1(_id) {
+      this.showImg1 = true;
+      this.techList2 = this.techList1;
       this.techList2 = this.techList2.filter(item => item._id !== _id);
-
-      // const { data } = this.$request.fetch('/api/img/img', { _id }, 'post');
-      // console.log(data);
-    }
+      this.techList1.forEach(item => {
+        if (item._id === _id) {
+          this.imgPath1 = `${this.staticPath}${item.path}`
+        }
+      })
+    },
+    selected2(_id) {
+      this.showImg2 = true;
+      this.techList2.forEach(item => {
+        if (item._id === _id) {
+          this.imgPath2 = `${this.staticPath}${item.path}`
+        }
+      })
+    },
   }
 };
 </script>

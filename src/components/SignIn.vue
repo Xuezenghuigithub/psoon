@@ -79,7 +79,8 @@ export default {
 
       const { data } = await this.$request.fetch('/api/login', { email: this.email, password }, 'post');
       if (data.status === 200) {
-        this.$snackbar().showOk('登录成功');
+        // this.$snackbar().showOk('登录成功');
+        this.$snackbar().showOk('是的，你登录成功了，但暂时还没有什么特殊的功能给你用');
         localStorage.setItem('username', data.result.username);
         localStorage.setItem('isAdmin', data.result.is_admin);
         this.close();

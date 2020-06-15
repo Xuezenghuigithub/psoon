@@ -1,5 +1,5 @@
 <template>
-  <v-card flat tile height="100%">
+  <v-card flat tile height="100%" class="card">
 
     <!-- 上传图片 -->
     <v-dialog v-model="upload" max-width="700">
@@ -15,7 +15,8 @@
                   <v-text-field :rules="nameRules" v-model="name" label="Name" required></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-file-input v-model="file" :rules="imgRules" prepend-icon="mdi-camera" accept="image/png, image/jpeg" show-size label="Image"></v-file-input>
+                  <v-file-input v-model="file" :rules="imgRules" prepend-icon="mdi-camera"
+                    accept="image/png, image/jpeg" show-size label="Image"></v-file-input>
                 </v-col>
               </v-row>
             </v-form>
@@ -29,21 +30,22 @@
       </v-card>
     </v-dialog>
 
-    <v-toolbar color="cyan" dark>
+    <v-toolbar color="#009efd" dark>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
       <v-toolbar-title>Techs</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
-      <v-autocomplete></v-autocomplete>
+      <v-autocomplete class="mt-5" height="50" :items="techList" item-text="name" item-value="_id" width=400>
+      </v-autocomplete>
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-btn icon @click.stop="upload = true">
         <v-icon>mdi-upload</v-icon>
       </v-btn>
-      
+
     </v-toolbar>
 
     <v-container fluid>
@@ -55,11 +57,11 @@
             <v-toolbar floating dark dense>
               <v-toolbar-title>{{ tech.name }}</v-toolbar-title>
             </v-toolbar>
-            
-            <v-tooltip bottom nudge-right=135> 
+
+            <v-tooltip bottom nudge-right=135>
               <template v-slot:activator="{ on }">
-                <v-img v-on="on" class="img" :src="`http://localhost:2000/${tech.path}`" height="300px">
-                <!-- 图片文字 -->
+                <v-img v-on="on" class="img" :src="`${staticPath}${tech.path}`" height="300px">
+                  <!-- 图片文字 -->
                   <!-- <span class="headline white--text pl-4 pt-4" v-text="tech.by"></span> -->
                 </v-img>
               </template>
@@ -67,7 +69,8 @@
             </v-tooltip>
 
             <v-card-actions class="white justify-center">
-              <v-btn v-for="(operation, i) in operations" :key="i" :color="operation.color" class="white--text" fab icon small>
+              <v-btn v-for="(operation, i) in operations" :key="i" :color="operation.color" class="white--text" fab icon
+                small>
                 <v-icon>{{ operation.icon }}</v-icon>
               </v-btn>
             </v-card-actions>
@@ -81,18 +84,16 @@
 <script>
 export default {
   data: () => ({
+    staticPath: "http://localhost:2000/",
     techList: [],
     form: true,
     name: "", // 上传的 Tech 名
     file: null,
     upload: false, // 控制上传弹框
-    nameRules: [
-      v => !!v || '必填',
-      v => v.length <= 10 || "长度需小于10",
-    ], 
+    nameRules: [v => !!v || "必填", v => v.length <= 10 || "长度需小于10"],
     imgRules: [
-      v => !!v || '必填',
-      v => !v || v.size < 5 * 1024 *1024 || '图片大小需小于 5 MB',
+      v => !!v || "必填",
+      v => !v || v.size < 5 * 1024 * 1024 || "图片大小需小于 5 MB"
     ],
     uploadImg: null,
     operations: [
@@ -114,29 +115,29 @@ export default {
     this.getTechList();
   },
   methods: {
-    async getTechList(){
+    async getTechList() {
       const { data } = await this.$request.fetch("/api/img/tech");
       if (data.status === 200) {
         data.result.map(item => {
           item.upload_time = new Date(item.upload_time).toLocaleString();
-        })
+        });
         this.techList = data.result;
       } else {
         this.$snackbar().showError();
       }
     },
-    close (){
+    close() {
       this.upload = false;
       this.$refs.form.resetValidation();
       this.name = "";
       this.file = null;
     },
-    async submit(){
-      if(!this.form || this.file === null) return;
+    async submit() {
+      if (!this.form || this.file === null) return;
       this.upload = false;
 
       const file = new FormData();
-      file.append('file', this.file);
+      file.append("file", this.file);
 
       const options = {
         method: "POST",
@@ -146,13 +147,13 @@ export default {
           name: this.name
         },
         headers: { "Content-Type": "multipart/form-data" }
-      }
+      };
       const { data } = await this.$request.fetch(options);
       if (data.status === 200) {
-        this.$snackbar().showOk('新增成功');
+        this.$snackbar().showOk("新增成功");
         this.getTechList();
       } else {
-        this.$snackbar().showError('新增失败，请刷新重试');
+        this.$snackbar().showError("新增失败，请刷新重试");
       }
       this.$refs.form.resetValidation();
       this.name = "";
@@ -162,7 +163,10 @@ export default {
 };
 </script>
 <style lang="scss" scope>
-  .img {
-    cursor: pointer;
-  }
+.card {
+  background-image: linear-gradient(180deg,  #009efd 0%, #2af598 100%,);
+}
+.img {
+  cursor: pointer;
+}
 </style>

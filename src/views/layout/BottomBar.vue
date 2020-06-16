@@ -36,7 +36,7 @@ export default {
 
       const { data } = await this.$request.fetch('/api/other/like', {}, 'post');
       if (data.status === 200) {
-        this.likeCount = data.result.count;
+        this.likeCount = data.result.count + 1;
         const newCount = ownCount + 1; // 用户新的 count
         localStorage.setItem('ownCount', newCount);
         this.ownCount = newCount;

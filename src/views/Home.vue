@@ -36,9 +36,19 @@
             <v-img v-if="showImg1" alt="Tech1" height="400" contain :src="imgPath1"></v-img>
           </v-card>
         </v-col>
+        
 
-        <v-col cols="2" align="center">
-          <v-icon x-large color="blue">mdi-plus</v-icon>
+        <v-col cols="1" align="center">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon large :color="color">mdi-palette</v-icon>
+              </v-btn>
+            </template>
+            <v-color-picker elevation=24 show-swatches v-model="color" @change="getColor">
+            </v-color-picker>
+          </v-menu>
+
         </v-col>
 
         <v-col cols="5">
@@ -52,8 +62,15 @@
 
       <v-row justify="center" class="mt-10">
         <v-col align="center">
-          <v-btn color="#222" elevation=24 width="180" height="70" class="compose-button" x-large><label>Magic</label>
+          <v-btn @click="ps" color="#222" elevation=24 width="180" height="70" class="compose-button" x-large><label>Magic</label>
           </v-btn>
+        </v-col>
+      </v-row>
+
+      <v-row justify="center" v-show="showResult" class="mt-10">
+        <v-col align="center">
+            <!-- <canvas width="1000px" height="500px" ref="canvas"></canvas> -->
+            <canvas ref="canvas"></canvas>
         </v-col>
       </v-row>
 
@@ -65,6 +82,7 @@
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
 import { EventBus } from '@/utils/eventBus';
+import Ps from '@/utils/ps';
 
 export default {
   name: "Home",
@@ -82,13 +100,14 @@ export default {
     imgPath2: "",
     showImg1: false,
     showImg2: false,
+    showResult: false,
+    color: '#fff', // canvas 背景颜色
   }),
   mounted() {
     this.getTechs();
     EventBus.$on('topBarLogin', param => {
       this.showSignIn = param;
     })
-    this.src=`http://localhost:2000/images/zander.jpg`
   },
   methods: {
     async getTechs() {
@@ -137,6 +156,20 @@ export default {
         }
       })
     },
+    getColor(){
+
+    },
+    // 合成图片
+    async ps(){
+      const options = {
+        width: 1000,
+        height: 600,
+        background: this.color,
+        padding: 20
+      }
+      Ps.compose(this.$refs.canvas, this.imgPath1, this.imgPath2, options);
+      this.showResult = true;
+    }
   }
 };
 </script>

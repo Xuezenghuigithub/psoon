@@ -16,7 +16,7 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   <v-file-input v-model="file" :rules="imgRules" prepend-icon="mdi-camera"
-                    accept="image/png, image/jpeg" show-size label="Image"></v-file-input>
+                    accept="image/png, image/jpeg, image/svg+xml" show-size label="Image"></v-file-input>
                 </v-col>
               </v-row>
             </v-form>
@@ -51,7 +51,6 @@
     <v-container fluid>
 
       <v-row>
-        <!-- <v-spacer></v-spacer> -->
         <v-col v-for="tech in techList" :key="tech._id" cols="12" sm="6" md="4">
           <v-card>
             <v-toolbar floating dark dense>
@@ -82,6 +81,7 @@
 </template>
 
 <script>
+import Ps from '@/utils/ps';
 export default {
   data: () => ({
     staticPath: "http://localhost:2000/",
@@ -136,16 +136,24 @@ export default {
       if (!this.form || this.file === null) return;
       this.upload = false;
 
+      // 处理图片大小
+      const reader = new FileReader(); // 实例化对象
+      reader.readAsDataURL(this.file); // 开始异步读取文件
+      
+      const newFile = await new Promise((resolve, reject) => {
+          reader.onload = async function (e) { // 读取完文件后触发的函数
+          const img = new Image();
+          img.src = e.target.result;
+          resolve(await Ps.changeSize(img, 500));
+        }
+      })
       const file = new FormData();
-      file.append("file", this.file);
-
+      file.append("file", newFile);
+      file.append("name", this.name);
       const options = {
         method: "POST",
         url: "/api/img/tech",
         data: file,
-        formData: {
-          name: this.name
-        },
         headers: { "Content-Type": "multipart/form-data" }
       };
       const { data } = await this.$request.fetch(options);

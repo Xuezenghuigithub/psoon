@@ -1,8 +1,8 @@
 <template>
   <v-bottom-navigation dark hide-on-scroll horizontal>
-    <v-btn :disabled="likeCount >=10 ? true :false" @click="like" value="recent" block>
-      <span>Like</span>
-      <v-icon>mdi-thumb-up-outline</v-icon>
+    <v-btn :disabled="ownCount >=10 ? true :false" @click="like" value="recent" block>
+      <span>Like {{likeCount}}</span>
+      <v-icon>{{ ownCount >= 10 ? "mdi-thumb-up" : "mdi-thumb-up-outline" }}</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </template>
@@ -12,27 +12,34 @@ export default {
   name: "",
   data() {
     return {
-      likeCount: 0
+      likeCount: 0, // 总点赞数
+      ownCount: 0 // 用户的点赞数，最大为10
     };
   },
   mounted() {
-    localStorage.setItem('likeCount', 0);
+    localStorage.setItem('ownCount', 0);
+    this.ownCount = parseInt(localStorage.getItem('ownCount'));
     this.getCount();
   },
   methods: {
-    getCount(){
-      const { data } = this.$request.fetch('/api/other/like');
-      console.log(data);
+    async getCount(){
+      const { data } = await this.$request.fetch('/api/other/like');
+      if (data.status === 200) {
+        this.likeCount = data.result.count;
+      } else {
+        this.$snackbar().showError();
+      }
     },
     async like(){
-      const count = localStorage.getItem('likeCount');
-      if (count >= 10) return;
+      const ownCount = parseInt(localStorage.getItem('ownCount'))
+      if (ownCount >= 10) return;
 
       const { data } = await this.$request.fetch('/api/other/like', {}, 'post');
       if (data.status === 200) {
-        const newCount = 1 + parseInt(count);
-        localStorage.setItem('likeCount', newCount);
-        this.likeCount = newCount;
+        this.likeCount = data.result.count;
+        const newCount = ownCount + 1; // 用户新的 count
+        localStorage.setItem('ownCount', newCount);
+        this.ownCount = newCount;
       } else {
         this.$snackbar().showError('点赞失败，请刷新重试');
       }

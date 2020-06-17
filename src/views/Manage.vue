@@ -51,9 +51,9 @@
 
       <v-spacer></v-spacer>
 
-      <v-autocomplete class="mt-5" height="50" :items="techList" item-text="name" item-value="_id" width=400>
+      <v-autocomplete v-model="tech" class="mt-5" height="50" :items="searchList" item-text="name" item-value="_id" width=400>
       </v-autocomplete>
-      <v-btn icon>
+      <v-btn icon @click="search">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-btn icon @click.stop="upload = true">
@@ -105,9 +105,11 @@ export default {
   data: () => ({
     staticPath: "http://localhost:2000/",
     techList: [],
+    searchList: [],
     form: true,
     name: "", // 上传的 Tech 名
     file: null,
+    tech: "",
     upload: false, // 控制上传弹框
     nameRules: [v => !!v || "必填", v => v.length <= 10 || "长度需小于10"],
     imgRules: [
@@ -126,10 +128,13 @@ export default {
     async getTechList() {
       const { data } = await this.$request.fetch("/api/tech/tech");
       if (data.status === 200) {
+        this.techList = [];
+        this.searchList = [];
         data.result.map(item => {
           item.upload_time = new Date(item.upload_time).toLocaleString();
+          this.techList.push(item);
+          this.searchList.push(item);
         });
-        this.techList = data.result;
       } else {
         this.$snackbar().showError();
       }
@@ -175,10 +180,12 @@ export default {
       this.name = "";
       this.file = null;
     },
+
     download(tech){
       const src = `${this.staticPath}${tech.path}`;
       this.downloadIamge(src, tech.name);
     },
+
     downloadIamge(imgsrc, name) {
       // 下载图片地址和图片名
       const image = new Image();
@@ -198,10 +205,12 @@ export default {
       };
       image.src = imgsrc;
     },
+
     handleDelete(tech){
       this.deleteId = tech._id;
       this.deleteDialog = true;
     },
+
     async deleteTech(){
       const { data } = await this.$request.fetch('/api/tech/tech', { _id: this.deleteId }, 'delete');
       if (data.status === 200) {
@@ -211,6 +220,14 @@ export default {
         this.$snackbar().showError("删除失败，请刷新重试");
       }
       this.deleteDialog = false;
+    },
+
+    async search(){
+      if (!this.tech) {
+        return await this.getTechList();
+      };
+      await this.getTechList();
+      this.techList = this.techList.filter(item => item._id === this.tech);
     }
   }
 };

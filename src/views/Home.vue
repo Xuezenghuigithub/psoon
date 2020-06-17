@@ -32,7 +32,7 @@
         <v-col cols="5">
           <v-card class="pa-3" color="rgba(198,208,222,.7)" elevation="10" hover light shaped>
             <v-autocomplete @change="selected1" label="Please Select Tech" :items="techList1" item-text="name"
-              item-value="_id"></v-autocomplete>
+              item-value="_id" v-model="tech1"></v-autocomplete>
             <v-img v-if="showImg1" alt="Tech1" height="400" contain :src="imgPath1"></v-img>
           </v-card>
         </v-col>
@@ -45,7 +45,7 @@
                 <v-icon large :color="color">mdi-palette</v-icon>
               </v-btn>
             </template>
-            <v-color-picker elevation=24 show-swatches v-model="color" @change="getColor">
+            <v-color-picker elevation=24 show-swatches v-model="color">
             </v-color-picker>
           </v-menu>
 
@@ -53,7 +53,7 @@
 
         <v-col cols="5">
           <v-card class="pa-3" color="rgba(198,208,222,.7)" elevation="10" hover light shaped>
-            <v-autocomplete @change="selected2" label="Please Select Tech" :items="techList2" item-text="name" item-value="_id">
+            <v-autocomplete v-model="tech2" @change="selected2" label="Please Select Tech" :items="techList2" item-text="name" item-value="_id">
             </v-autocomplete>
             <v-img v-if="showImg2" alt="Tech2" height="400" :src="imgPath2"></v-img>
           </v-card>
@@ -101,6 +101,8 @@ export default {
     showImg2: false,
     showResult: false,
     color: '#fff', // canvas 背景颜色
+    tech1: "",
+    tech2: "",
   }),
   mounted() {
     this.getTechs();
@@ -155,11 +157,12 @@ export default {
         }
       })
     },
-    getColor(){
-
-    },
     // 合成图片
     async ps(){
+      if (!this.tech1 || !this.tech2) {
+        return this.$snackbar().showError('未选择 Tech');
+      };
+        
       const options = {
         width: 1000,
         height: 600,

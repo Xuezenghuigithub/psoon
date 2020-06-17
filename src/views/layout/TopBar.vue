@@ -2,7 +2,7 @@
   <v-app-bar app dark>
     <div class="d-flex align-center brand">
       <v-img alt="Vuetify Logo" class="shrink mr-2" contain
-        src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png" width="40" />
+        src="../../assets/logo_png.png" width="40" />
       <router-link tag="span" to="/Home">Psoon</router-link>
     </div>
 

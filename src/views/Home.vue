@@ -13,7 +13,7 @@
 
       <v-row class="text-center">
         <v-col cols="12">
-          <v-img :src="require('../assets/logo.svg')" class="my-10" contain height="200" />
+          <v-img :src="require('../assets/logo.svg')" class="my-10" contain height="400" />
         </v-col>
 
         <v-col class="mb-4">

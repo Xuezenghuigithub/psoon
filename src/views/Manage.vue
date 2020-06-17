@@ -2,7 +2,7 @@
   <v-card flat tile height="100%" class="card">
 
     <!-- 上传图片 -->
-    <v-dialog v-model="upload" max-width="700">
+    <v-dialog persistent dark v-model="upload" max-width="700">
       <v-card>
         <v-card-title>
           <span class="headline">Upload Tech</span>
@@ -26,6 +26,20 @@
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="close">Close</v-btn>
           <v-btn color="blue darken-1" text @click="submit">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- 删除确认 -->
+    <v-dialog overlay-color="red" persistent dark v-model="deleteDialog" max-width="700">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Are you sure to delete that tech?</span>
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="deleteDialog = false">No</v-btn>
+          <v-btn color="blue darken-1" text @click="deleteTech">Yes</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -68,9 +82,14 @@
             </v-tooltip>
 
             <v-card-actions class="white justify-center">
-              <v-btn v-for="(operation, i) in operations" :key="i" :color="operation.color" class="white--text" fab icon
-                small>
-                <v-icon>{{ operation.icon }}</v-icon>
+              <v-btn color="yellow" class="white--text" fab icon small>
+                <v-icon>mdi-flower</v-icon>
+              </v-btn>
+              <v-btn @click="download(tech)" color="cyan darken-1" class="white--text" fab icon small>
+                <v-icon>mdi-download</v-icon>
+              </v-btn>
+              <v-btn @click="deleteDialog = true" color="red lighten-3" class="white--text" fab icon small>
+                <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -96,20 +115,8 @@ export default {
       v => !v || v.size < 5 * 1024 * 1024 || "图片大小需小于 5 MB"
     ],
     uploadImg: null,
-    operations: [
-      {
-        icon: "mdi-flower",
-        color: "yellow"
-      },
-      {
-        icon: "mdi-download",
-        color: "cyan darken-1"
-      },
-      {
-        icon: "mdi-delete",
-        color: "red lighten-3"
-      }
-    ]
+    downloadUrl: "",
+    deleteDialog: false
   }),
   mounted() {
     this.getTechList();
@@ -139,7 +146,7 @@ export default {
       // 处理图片大小
       const reader = new FileReader(); // 实例化对象
       reader.readAsDataURL(this.file); // 开始异步读取文件
-      
+
       const newFile = await new Promise((resolve, reject) => {
           reader.onload = async function (e) { // 读取完文件后触发的函数
           const img = new Image();
@@ -166,6 +173,32 @@ export default {
       this.$refs.form.resetValidation();
       this.name = "";
       this.file = null;
+    },
+    download(tech){
+      const src = `${this.staticPath}${tech.path}`;
+      this.downloadIamge(src, tech.name);
+    },
+    downloadIamge(imgsrc, name) {
+      // 下载图片地址和图片名
+      const image = new Image();
+      // 解决跨域 Canvas 污染问题
+      image.setAttribute('crossOrigin', 'anonymous');
+      image.onload = function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0, image.width, image.height);
+        const url = canvas.toDataURL('image/png'); // 得到图片的base64编码数据
+        const a = document.createElement('a'); // 生成一个a元素
+        a.download = name || 'photo'; // 设置图片名称
+        a.href = url; // 将生成的URL设置为a.href属性
+        a.click();
+      };
+      image.src = imgsrc;
+    },
+    deleteTech(){
+      console.log('111');
     }
   }
 };

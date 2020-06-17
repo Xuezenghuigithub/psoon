@@ -39,7 +39,7 @@
         
 
         <v-col cols="1" align="center">
-          <v-menu offset-y>
+          <v-menu offset-y :close-on-content-click="false">
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon v-bind="attrs" v-on="on">
                 <v-icon large :color="color">mdi-palette</v-icon>
@@ -69,7 +69,6 @@
 
       <v-row justify="center" v-show="showResult" class="mt-10">
         <v-col align="center">
-            <!-- <canvas width="1000px" height="500px" ref="canvas"></canvas> -->
             <canvas ref="canvas"></canvas>
         </v-col>
       </v-row>

@@ -88,7 +88,7 @@
               <v-btn @click="download(tech)" color="cyan darken-1" class="white--text" fab icon small>
                 <v-icon>mdi-download</v-icon>
               </v-btn>
-              <v-btn @click="deleteDialog = true" color="red lighten-3" class="white--text" fab icon small>
+              <v-btn @click="handleDelete(tech)" color="red lighten-3" class="white--text" fab icon small>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-card-actions>
@@ -116,14 +116,15 @@ export default {
     ],
     uploadImg: null,
     downloadUrl: "",
-    deleteDialog: false
+    deleteDialog: false,
+    deleteId: ""
   }),
   mounted() {
     this.getTechList();
   },
   methods: {
     async getTechList() {
-      const { data } = await this.$request.fetch("/api/img/tech");
+      const { data } = await this.$request.fetch("/api/tech/tech");
       if (data.status === 200) {
         data.result.map(item => {
           item.upload_time = new Date(item.upload_time).toLocaleString();
@@ -159,7 +160,7 @@ export default {
       file.append("name", this.name);
       const options = {
         method: "POST",
-        url: "/api/img/tech",
+        url: "/api/tech/tech",
         data: file,
         headers: { "Content-Type": "multipart/form-data" }
       };
@@ -197,8 +198,19 @@ export default {
       };
       image.src = imgsrc;
     },
-    deleteTech(){
-      console.log('111');
+    handleDelete(tech){
+      this.deleteId = tech._id;
+      this.deleteDialog = true;
+    },
+    async deleteTech(){
+      const { data } = await this.$request.fetch('/api/tech/tech', { _id: this.deleteId }, 'delete');
+      if (data.status === 200) {
+        this.$snackbar().showOk("删除成功");
+        this.getTechList();
+      } else {
+        this.$snackbar().showError("删除失败，请刷新重试");
+      }
+      this.deleteDialog = false;
     }
   }
 };

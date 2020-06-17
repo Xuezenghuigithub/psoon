@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     async getTechs() {
-      const { data } = await this.$request.fetch("/api/img/tech");
+      const { data } = await this.$request.fetch("/api/tech/tech");
       if (data.status === 200) {
         this.techList1 = data.result;
         this.techList2 = data.result;

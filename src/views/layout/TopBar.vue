@@ -1,9 +1,11 @@
 <template>
   <v-app-bar app dark>
     <div class="d-flex align-center brand">
-      <v-img alt="Vuetify Logo" class="shrink mr-2" contain
-        src="../../assets/logo_png.png" width="40" />
-      <router-link tag="span" to="/Home">Psoon</router-link>
+      <v-img alt="Logo" class="shrink mr-2" contain
+        src="../../assets/images/logo_png.png" width="40" />
+      <router-link tag="span" to="/Home">
+        <v-img :src="require('../../assets/images/brand.svg')" contain height="30" width="130" />
+      </router-link>
     </div>
 
     <v-spacer></v-spacer>

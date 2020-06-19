@@ -44,7 +44,7 @@ html {
   a {
     text-decoration: none;
   }
-  font-size: 62.5%;
+  font-size: 16px;
   height: 100%;
   overflow: hidden;
 }

@@ -122,6 +122,10 @@ export default {
     deleteId: ""
   }),
   mounted() {
+    if (!localStorage.getItem('username')) {
+      this.$snackbar().showError('请先登录');
+      return this.$router.push('Home');
+    }
     this.getTechList();
   },
   methods: {
